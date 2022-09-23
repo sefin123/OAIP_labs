@@ -1,0 +1,6 @@
+﻿  Source.cpp
+C:\Users\ASUS\source\repos\лаба1.1\лаба1.1\Source.cpp(9,27): warning C4474: "printf" : для строки формата передано слишком много аргументов
+C:\Users\ASUS\source\repos\лаба1.1\лаба1.1\Source.cpp(9,27): message : заполнители и их параметры ожидают переменное число аргументов в количестве 0, но было предоставлено 1
+C:\Users\ASUS\source\repos\лаба1.1\лаба1.1\Source.cpp(11,27): warning C4474: "printf" : для строки формата передано слишком много аргументов
+C:\Users\ASUS\source\repos\лаба1.1\лаба1.1\Source.cpp(11,27): message : заполнители и их параметры ожидают переменное число аргументов в количестве 0, но было предоставлено 1
+  лаба1.1.vcxproj -> C:\Users\ASUS\source\repos\лаба1.1\x64\Debug\лаба1.1.exe
