@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\lab1.1",
-    "\\lab1.1\\лаба1.1"
+    "\\lab1.1\\лаба1.1",
+    "\\lab3",
+    "\\lab3\\lab3",
+    "\\lab3\\lab3\\lab3"
   ],
-  "SelectedNode": "\\lab1.1\\лаба1.1\\Source.cpp",
+  "SelectedNode": "\\lab3\\lab3\\lab3\\Source.cpp",
   "PreviewInSolutionExplorer": false
 }
