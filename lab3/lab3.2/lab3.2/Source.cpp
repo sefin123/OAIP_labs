@@ -15,33 +15,37 @@ void moveArray(int startIndex, int endIndex,int distance,int arr[]) {
 int main()
 {
 	srand((unsigned int)time(NULL));
-	int pathNumber, z, i, size, b, arr[100] = { 0 };
-	printf("Enter size\n");
-	scanf_s("%d", &size);
+	int pathNumber, i, size = 0, b, arr[100] = { 0 };
+	bool boolean = 0;
+	while (size > 100 || size < 1 || size % 1 != 0) {
+		rewind(stdin);
+		printf("Enter size\n");
+		scanf_s("%d", &size);
+	}
 	printf("Select the path to fill the array (1 by yourself,2 random)\n");
 	scanf_s("%d", &pathNumber);
 	switch (pathNumber)
 	{
 	case 1:
-		for (i = 0; i < size; i++)
-		{
-			scanf_s("%d", &z);
-			arr[i] = z;
+		printf("Enter array\n");
+		for (int i = 0; i < size; i++) {
+			boolean = scanf_s("%d", &arr[i]);
+			while (boolean != 1) {
+				printf("enter array again\n");
+				rewind(stdin);
+				boolean = scanf_s("%d", &arr[i]);
+			}
 		}
 		break;
 	case 2:
-		for (i = 0; i < size; i++)
-		{
+		for (int i = 0; i < size; i++) {
 			arr[i] = rand() % 10;
 		}
-		for (i = 0; i < size; ++i)
-			printf("%3d ", arr[i]);  // 4 1 7 9 3
 		break;
 	default:
-		printf("Error unknown number.\n");
+		printf("Error unknown number\n");
 	}
-	printf("\n");
-	printf("\n");
+
 	int max = arr[0];
 	int indexOfMax = 0;
 	for (int i = 0; i < size; i++)
