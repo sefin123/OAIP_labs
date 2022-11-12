@@ -1,0 +1,4 @@
+﻿  main.c
+E:\labs\OAIP\OAIP_labs\lab5\lab5.3\lab5.3\main.c(27,20): warning C4477: "printf": в строке форматирования "%3d" требуется аргумент типа "int", но вариативный аргумент "1" имеет тип "int *"
+E:\labs\OAIP\OAIP_labs\lab5\lab5.3\lab5.3\main.c(27,20): warning C4313: printf: конфликт "%d" в строке формата с аргументом 1 типа "int *"
+  lab5.3.vcxproj -> E:\labs\OAIP\OAIP_labs\lab5\lab5.3\x64\Debug\lab5.3.exe
