@@ -6,39 +6,24 @@
 int main()
 {
     int row = 0, col = 0;
+
     printf("enter row ");
-    row = checkEnter(row);
+    row = enterWithValidation(row);
+    
     printf("enter col ");
-    col = checkEnter(col);
-    int* arrFirst = calloc(row , sizeof(int));
-    for (int i = 0; i < row; i++) arrFirst[i] = col;
-    int** arrSecond = calloc(row, sizeof(int*));
+    col = enterWithValidation(col);
+    
+    int** matrix = fillMatrix(row, col);
+   /* int** matrix = calloc(row, sizeof(int*));
     for (int i = 0; i < row; i++) {
-        arrSecond[i] = calloc(col, sizeof(int));
+        if (matrix == NULL) abort();
+        matrix[i] = calloc(col, sizeof(int));
+        if (matrix[i] == NULL) abort();
         for (int j = 0; j < col; j++) {
-            arrSecond[i][j] = checkEnter(arrSecond[i][j]);
-        }
-    }
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < col; j++) {
-            printf("%3d ", arrSecond[i][j]);
-        }
-        printf("\n");
-    }
-    checkElement(arrSecond, row, col);
- /*   for (int i = 0; i < row; i++) {
-        int sum = 0;
-        {
-            for (int j = 0; j < col; j++) {
-                sum = sum + arrSecond[i][j];
-            }
-            for (int j = 0; j < col; j++) {
-                if (arrSecond[i][j] > sum - arrSecond[i][j]) {
-                    printf("array have the element\n");
-                }
-            }
+            matrix[i][j] = enterWithValidation(matrix[i][j]);
         }
     }*/
-
+    printMatrix(matrix, row ,col);
+    checkElement(matrix, row, col);
     return 0;
 }
