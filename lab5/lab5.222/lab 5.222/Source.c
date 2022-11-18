@@ -4,28 +4,44 @@
 #include <time.h>
 #include <stdbool.h>
 
-int checkEnter(int a) {
-    while (scanf_s("%d", &a) != 1 || getchar() != '\n') {
+int enterWithValidation() {
+    int a;
+    while (scanf_s("%d", &a) != 1 || a < 1 || a % 1 != 0 || getchar() != '\n') {
         printf("error\n");
         rewind(stdin);
     }
     return a;
 }
 
-int symmetric(int** arrFirst, int size) {
-    bool sim = true;
+int** fillMatrix(int size) {
+    int** arrFirst = (int**)calloc(size, sizeof(int*));
+    for (int i = 0; i < size; i++) {
+        arrFirst[i] = (int*)calloc(size, sizeof(int));
+        for (int j = 0; j < size; j++) {
+            arrFirst[i][j] = enterWithValidation(arrFirst);
+        }
+    }
+    return arrFirst;
+}
+
+void printMatrix(int** matrix, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            printf("%3d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+bool isSymmetric(int** arrFirst, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (arrFirst[i][j] != arrFirst[size - 1 - j][size - 1 - i]) {
-                sim = false;
-                break;
+                return false;
             }
         }
-        if (!sim) {
-            break;
-        }
     }
-    return sim;
+    return true;
 }
 
 void newArr(int** arrFirst, int size, bool sim) {
@@ -38,26 +54,26 @@ void newArr(int** arrFirst, int size, bool sim) {
     if (sim == true) {
         printf("the matrix is symmetric with respect to the secondary diagonal\n");
         for (int i = 0; i < size; i++) {
-            int flag = 0;
+            int count = 0;
             for (int j = 0; j < size; j++) {
                 if (i == size - j - 1) {
-                    flag++;
+                    count++;
                     continue;
                 }
-                arrSecond[i][j - flag] = arrFirst[i][j];
+                arrSecond[i][j - count] = arrFirst[i][j];
             }
         }
     }
     else {
         printf("the matrix is not symmetric with respect to the secondary diagonal\n");
         for (int i = 0; i < size; i++) {
-            int flag = 0;
+            int count = 0;
             for (int j = 0; j < size; j++) {
                 if (i == j) {
-                    flag++;
+                    count++;
                     continue;
                 }
-                arrSecond[i][j - flag] = arrFirst[i][j];
+                arrSecond[i][j - count] = arrFirst[i][j];
             }
         }
     }
@@ -67,5 +83,4 @@ void newArr(int** arrFirst, int size, bool sim) {
         }
         printf("\n");
     }
-    free(arrSecond);
 }

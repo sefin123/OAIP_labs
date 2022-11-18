@@ -12,11 +12,11 @@ int enterWithValidation() {
 }
 
 int** fillMatrix(int row, int col) {
-    int** matrix = calloc(row, sizeof(int*));
+    int** matrix =(int**) calloc(row, sizeof(int*));
     for (int i = 0; i < row; i++) {
-        matrix[i] = calloc(col, sizeof(int));
+        matrix[i] =(int*) calloc(col, sizeof(int));
         for (int j = 0; j < col; j++) {
-            matrix[i][j] = enterWithValidation(matrix[i][j]);
+            matrix[i][j] = enterWithValidation(matrix);
         }
     }
     return matrix;
