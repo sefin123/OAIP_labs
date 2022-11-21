@@ -1,3 +1,0 @@
-﻿  main.c
-E:\labs\OAIP\OAIP_labs\lab5\lab5.222\lab 5.222\main.c(12,5): warning C4013: printMatrix: нет определения; предполагается "extern" с возвратом типа "int"
-  lab 5.222.vcxproj -> E:\labs\OAIP\OAIP_labs\lab5\lab5.222\x64\Debug\lab 5.222.exe
