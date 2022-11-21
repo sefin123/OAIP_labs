@@ -14,13 +14,11 @@ int main() {
     printf("enter number ");
     number = checkEnter(number);
     
-    int* arrFirst = fillArrFirst(row, col);
-    
-    int** arrSecond = fillArrSecond(row, col);
+    int** matrix = fillMatrix(allocateMemoryForArray(row, col), row, col);
 
-    printArr(arrSecond, row, col);
+    printArr(matrix, row, col);
 
-    search(arrSecond, row, arrFirst, number);
+    search(matrix, row, col, number);
     
     return 0;
 }
