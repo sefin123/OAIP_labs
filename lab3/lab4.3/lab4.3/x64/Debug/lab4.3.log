@@ -1,3 +1,0 @@
-﻿  Source.cpp
-E:\labs\OAIP\OAIP_labs\lab3\lab4.3\lab4.3\Source.cpp(20,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  lab4.3.vcxproj -> E:\labs\OAIP\OAIP_labs\lab3\lab4.3\x64\Debug\lab4.3.exe
