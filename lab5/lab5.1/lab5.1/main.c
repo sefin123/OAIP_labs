@@ -11,12 +11,14 @@ int main() {
     
     printf("enter col ");
     col = enterWithValidation(col);
-    
-    int** matrix = fillMatrix(row, col);
+   
+    int** matrix = fillMatrix(allocateMemoryForArray(row, col), row, col);
 
     printMatrix(matrix, row ,col);
 
     checkElement(matrix, row, col);
 
+    freeMatrix(matrix, row);
+    
     return 0;
 }

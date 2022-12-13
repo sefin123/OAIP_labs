@@ -6,7 +6,16 @@
 
 int enterWithValidation() {
     int a;
-    while (scanf_s("%d", &a) != 1 || a < 1 || a % 1 != 0 || getchar() != '\n') {
+    while (scanf_s("%d", &a) != 1 || a < 1 || getchar() != '\n') {
+        printf("error\n");
+        rewind(stdin);
+    }
+    return a;
+}
+
+int enterMatrixWithValidation() {
+    int a;
+    while (scanf_s("%d", &a) != 1 || getchar() != '\n') {
         printf("error\n");
         rewind(stdin);
     }
@@ -17,16 +26,14 @@ int** allocateMemoryForArray(int size) {
     int** matrix = (int**)calloc(size, sizeof(int*));
     for (int i = 0; i < size; i++) {
         matrix[i] = (int*)calloc(size, sizeof(int));
-        
     }
     return matrix;
-
 }
 
 int** fillMatrix(int** matrix, int size) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            matrix[i][j] = enterWithValidation(matrix);
+            matrix[i][j] = enterMatrixWithValidation();
         }
     }
     return matrix;
@@ -52,39 +59,52 @@ bool isSymmetric(int** matrix, int size) {
     return true;
 }
 
-void newArr(int** arrFirst, int size, bool sim) {
+void simmetricMatrix(int** matrix, int size) {
+    printf("the matrix is symmetric with respect to the secondary diagonal\n");
+    for (int i = 0; i < size; i++) {
+        int count = 0;
+        for (int j = 0; j < size; j++) {
+            if (i == size - j - 1) {
+                count++;
+                continue;
+            }
+            matrix[i][j - count] = matrix[i][j];
+        }
+        matrix[i] = realloc(matrix[i], size * 4);
+    }
+}
 
+void nesimmetricMatrix(int** matrix, int size) {
+    printf("the matrix is not symmetric with respect to the secondary diagonal\n");
+    for (int i = 0; i < size; i++) {
+        int count = 0;
+        for (int j = 0; j < size; j++) {
+            if (i == j) {
+                count++;
+                continue;
+            }
+            matrix[i][j - count] = matrix[i][j];
+        }
+        matrix[i] = realloc(matrix[i], size * 4);
+    }
+}
+
+
+
+void newArr(int** matrix, int size, bool sim) {
+
+    sim == true ? simmetricMatrix(matrix, size) : nesimmetricMatrix(matrix, size);
     
-    if (sim == true) {
-        printf("the matrix is symmetric with respect to the secondary diagonal\n");
-        for (int i = 0; i < size; i++) {
-            int count = 0;
-            for (int j = 0; j < size; j++) {
-                if (i == size - j - 1) {
-                    count++;
-                    continue;
-                }
-                arrFirst[i][j - count] = arrFirst[i][j];
-            }
-        }
-    }
-    else {
-        printf("the matrix is not symmetric with respect to the secondary diagonal\n");
-        for (int i = 0; i < size; i++) {
-            int count = 0;
-            for (int j = 0; j < size; j++) {
-                if (i == j) {
-                    count++;
-                    continue;
-                }
-                arrFirst[i][j - count] = arrFirst[i][j];
-            }
-        }
-    }
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size - 1; j++) {
-            printf("%5d ", arrFirst[i][j]);
+            printf("%5d ", matrix[i][j]);
         }
         printf("\n");
     }
+}
+
+void freeMatrix(int** matrix, int size) {
+    for (int i = 0; i < size ; i++)
+        free(matrix[i]);
+    free(matrix);
 }

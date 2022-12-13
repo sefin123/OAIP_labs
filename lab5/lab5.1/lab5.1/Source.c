@@ -4,19 +4,34 @@
 
 int enterWithValidation() {
     int a;
-    while (scanf_s("%d", &a) != 1 || a < 1 || a % 1 != 0 || getchar() != '\n') {
+    while (scanf_s("%d", &a) != 1 || a < 1 || getchar() != '\n') {
         printf("error\n");
         rewind(stdin);
     }
     return a;
 }
 
-int** fillMatrix(int row, int col) {
-    int** matrix =(int**) calloc(row, sizeof(int*));
+int enterMatrixWithValidation() {
+    int a;
+    while (scanf_s("%d", &a) != 1 || getchar() != '\n') {
+        printf("error\n");
+        rewind(stdin);
+    }
+    return a;
+}
+
+int** allocateMemoryForArray(int row, int col) {
+    int** matrix = (int**)calloc(row, sizeof(int*));
     for (int i = 0; i < row; i++) {
-        matrix[i] =(int*) calloc(col, sizeof(int));
+        matrix[i] = (int*)calloc(col, sizeof(int));
+    }
+    return matrix;
+}
+
+int** fillMatrix(int** matrix, int row, int col) {
+    for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
-            matrix[i][j] = enterWithValidation(matrix);
+            matrix[i][j] = enterMatrixWithValidation();
         }
     }
     return matrix;
@@ -46,4 +61,10 @@ void checkElement(int** matrix, int row, int col) {
                  break;
              }
     }
+}
+
+void freeMatrix(int** matrix, int row) {
+    for (int i = 0; i < row; i++)
+        free(matrix[i]);
+    free(matrix);
 }

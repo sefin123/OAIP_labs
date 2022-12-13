@@ -6,13 +6,13 @@ int main() {
     int row = 0, col = 0, number = 0;
 
     printf("enter row ");
-    row = checkEnter(row);
+    row = enterWithValidation(row);
     
     printf("enter col ");
-    col = checkEnter(col);
+    col = enterWithValidation(col);
     
     printf("enter number ");
-    number = checkEnter(number);
+    number = enterWithValidation(number);
     
     int** matrix = fillMatrix(allocateMemoryForArray(row, col), row, col);
 
@@ -20,5 +20,6 @@ int main() {
 
     search(matrix, row, col, number);
     
+    freeMatrix(matrix, row);
     return 0;
 }

@@ -17,8 +17,7 @@ int main() {
     sim = isSymmetric(matrix, size);
 
     newArr(matrix, size, sim);
-    free(matrix);//разделить выделение памяти
-        //рквлоки
-        //очищение памяти
+
+    freeMatrix(matrix, size);
     return 0;
 }
