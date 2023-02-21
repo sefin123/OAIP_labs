@@ -25,7 +25,7 @@ char* enterPrintString() {
         flag = true;
         while ((ch = getchar()) != '\n') {
             str = append(str, len++, ch);
-            if ((ch > 64 && ch < 91) || (ch > 96 && ch < 123) || ch == 32) {
+            if ((ch > 64 && ch < 91) || (ch > 96 && ch < 123) || ch == 32 || ch == '\t') {
 
             }
             else {
@@ -48,7 +48,7 @@ void foundShortestWord(char* str, int len) {
         if (i == len) {
             printf("%c", str[i]);
         }
-        if (str[i] == ' ' || str[i] == '\0') {
+        if (str[i] == ' ' || str[i] == '\0' || str[i] == '\t') {
             indexWords++;
             if (curentyWord < minWord) {
                 minWord = curentyWord;
@@ -90,7 +90,18 @@ void newString(char* strFirst, int lenFirst, char* strSecond, int lenSecond, int
 
 }
 
-int enterWithValidation() {
+int enterWithValidation1(int lenSecond) {
+    int a;
+
+    while (scanf_s("%d", &a) != 1 || a > lenSecond || getchar() != '\n') {
+        printf("Error\n");
+        rewind(stdin);
+    }
+
+    return a;
+}
+
+int enterWithValidation(int lenSecond) {
     int a;
 
     while (scanf_s("%d", &a) != 1 || a < 1 || getchar() != '\n') {
@@ -108,6 +119,8 @@ void taskFirst() {
 
     foundShortestWord(str, len);
 
+    free(str);
+
 }
 
 void taskSecond() {
@@ -120,7 +133,11 @@ void taskSecond() {
 
     int lenSecond = strlen(strSecond);
 
-    int k = enterWithValidation();
+    int k = enterWithValidation1(lenSecond);
 
     newString(strFirst, lenFirst, strSecond, lenSecond, k);
+
+    free(strFirst);
+    free(strSecond);
+
 }

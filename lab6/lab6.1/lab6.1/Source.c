@@ -18,6 +18,8 @@ int* allocateMemoryForArray(int size) {
     return arr;
 }
 
+
+
 void fillArr(int* arr, int size) {
     int p;
     int n = 1000;

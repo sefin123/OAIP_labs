@@ -7,14 +7,17 @@
 
 int main() {
     
+    void (*task1) (void) = &taskFirst;
+    void (*task2) (void) = &taskSecond;
+
     printf("choose task\n");
     int task = enterWithValidation();
 
     if (task == 1) {
-        taskFirst();
+        task1();
     }
     else {
-        taskSecond();
+        task2();
     }
 
     return 0;

@@ -60,16 +60,16 @@ bool lessThen(const int* left, const int* right, int size) {
     return sum(left, size) < sum(right, size);
 }
 
-void quickSort(int** matrix, int left, int right, int width) {
+void quickSort(int** matrix, int left, int right, int size) {
     int i = left;
     int j = right;
     int* x = matrix[(i + j) / 2];
     do {
 
-        while (lessThen(matrix[i], x, width) && i < right) {
+        while (lessThen(matrix[i], x, size) && i < right) {
             i++;
         }
-        while (lessThen(x, matrix[j], width) && j > left) {
+        while (lessThen(x, matrix[j], size) && j > left) {
             j--;
         }
         if (i <= j) {
@@ -79,10 +79,10 @@ void quickSort(int** matrix, int left, int right, int width) {
         }
     } while (i <= j);
     if (j > left) {
-        quickSort(matrix, left, j, width);
+        quickSort(matrix, left, j, size);
     }
     if (i < right) {
-        quickSort(matrix, i, right, width);
+        quickSort(matrix, i, right, size);
     }
 }
 
