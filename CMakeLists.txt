@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
-project(OAIP_Labs C)
+project(OAIP_labs C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(OAIP_Labs scr/lab1/Header.h scr/lab1/Main.c scr/lab1/Source.c)
+add_executable(OAIP_labs src/lab1/Header.h src/lab1/Main.c src/lab1/Source.c)
