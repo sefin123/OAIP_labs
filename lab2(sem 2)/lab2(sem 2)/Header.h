@@ -1,8 +1,7 @@
 #pragma once
 
 typedef struct {
-	char* popularWord;
-	int amountPopularWord;
-	char* unpopularWord;
-	int amountUnpopularWord;
+	char* name;
+	int size;
+	int count;
 }word;
