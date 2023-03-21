@@ -104,7 +104,7 @@ int main() {
 		for (int i = 0; i <= (strlen(stringInFile)); i++)
 		{
 			// if space or NULL found, assign NULL into newString[ctr]
-			if (stringInFile[i] == ' ' || stringInFile[i] == '\0' || stringInFile[i] == '\n')
+			if (stringInFile[i] == ' ' || stringInFile[i] == '\0' || stringInFile[i] == '\n' || stringInFile[i] == ',' || stringInFile[i] == '.' || stringInFile[i] == ';' || stringInFile[i] == ':')
 			{
 				word[stringIndex] = '\0';
 
@@ -178,7 +178,7 @@ int main() {
 
 	for (int i = 0; i < dictionaryCounter; i++) {
 		printf("Word: %s\t", words[i].name);
-		fprintf(dictionaryFile, "source: %s -> destination: %s \n", dictionary[i].sourceName, dictionary[i].destinationName);
+		fprintf(dictionaryFile, "source %s->destination %s \n", dictionary[i].sourceName, dictionary[i].destinationName);
 	}
 
 	fclose(file);	
@@ -188,16 +188,5 @@ int main() {
 	fclose(file);
 
 	fclose(dictionaryFile);
-
-
-	// Если равно sourceNmae => меняем на destinationName
-	// Если равно destinationName => меняем на sourceNmae
-	// Если не равно ничему => оставялем
-
-
-	// Получить готовый массив структур check
-	// Отсортировать массив структур check
-	// Вызвавать decode пока размер меняется
-
 
 }
