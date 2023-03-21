@@ -15,29 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.c">
-      <Filter>Файлы ресурсов</Filter>
+    <ClCompile Include="lab2%28sem 2%29decompressor.c">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Source.c">
-      <Filter>Файлы ресурсов</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Header.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="file.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="dictionary.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
-    <Text Include="comprass.txt">
-      <Filter>Файлы ресурсов</Filter>
-    </Text>
   </ItemGroup>
 </Project>

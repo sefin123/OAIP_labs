@@ -9,3 +9,10 @@ typedef struct Word {
 	int value;
 	bool isChanged;
 } Word;
+
+
+typedef struct Dictionary {
+	char destinationName[50];
+	char sourceName[50];
+} Dictionary;
+
