@@ -15,25 +15,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.c">
-      <Filter>Файлы ресурсов</Filter>
-    </ClCompile>
-    <ClCompile Include="Source.c">
-      <Filter>Файлы ресурсов</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Header.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="file.txt">
+    <ClCompile Include="Decompressor.c">
       <Filter>Файлы ресурсов</Filter>
-    </None>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="comprass.txt">
+    <Text Include="dictionary.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="file.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>

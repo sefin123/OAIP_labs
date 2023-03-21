@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9100f387-ba13-4c64-9423-2bf9f8798fb3}</ProjectGuid>
-    <RootNamespace>lab2sem2</RootNamespace>
+    <ProjectGuid>{696eee4d-5b85-40d2-aa1a-20c4e30bce9f}</ProjectGuid>
+    <RootNamespace>Decompressor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,17 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.c" />
-    <ClCompile Include="Source.c" />
+    <ClCompile Include="Decompressor.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="file.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="comprass.txt" />
+    <Text Include="dictionary.txt" />
+    <Text Include="file.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
