@@ -28,12 +28,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="file.txt">
+    <Text Include="FileAfterComprass.txt">
       <Filter>Файлы ресурсов</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="comprass.txt">
+    </Text>
+    <Text Include="Dictionary.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="file.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>

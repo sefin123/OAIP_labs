@@ -28,32 +28,35 @@ void printMarks(char* str, int i, FILE* comprassFile) {
 }
 
 void deCompressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCounter) {
-	FILE* comprassFile;
-	char* str = calloc(256, sizeof(char));
+	FILE* deCompressFile;
+	char str[2048];
+	int dictionaryIterator = 0;
 	int wordIndex = 0;
-	comprassFile = fopen("decompress.txt", "w");
-	while ((fgets(str, 256, sourceFile)) != NULL) {
-		int dictionaryIterator = 0;
-		char* word = malloc(256 * sizeof(char));
+	int destinationName = 0;
+	deCompressFile = fopen("decompressor.txt", "w");
+	char word[128];
+	while ((fgets(str, 2048, sourceFile)) != NULL) {
 		for (int i = 0; i <= (strlen(str)); i++) {
-			if (str[i] == ' ' || str[i] == '\0' || str[i] == '\n') {
-				printMarks(str, i, comprassFile);
+			if (str[i] == ' ' || str[i] == '\0' || str[i] == '\n' || str[i] == ',' || str[i] == '.' || str[i] == ';' || str[i] == ':') {
 				word[wordIndex] = '\0';
-				for (int dictionaryIterator = 0; dictionaryIterator < dictionaryCounter; dictionaryIterator++) {
+				for (dictionaryIterator = 0; dictionaryIterator < dictionaryCounter; dictionaryIterator++) {
 					if (strcmp(dictionary[dictionaryIterator].destinationName, word) == 0) {
-						fprintf(comprassFile, "%s", dictionary[dictionaryIterator].sourceName);
+						fprintf(deCompressFile, "%s", dictionary[dictionaryIterator].sourceName);
+						printMarks(str, i, deCompressFile);
+
 						break;
 					}
 					else
 						if (strcmp(dictionary[dictionaryIterator].sourceName, word) == 0) {
-							fprintf(comprassFile, "%s", dictionary[dictionaryIterator].destinationName);
+							fprintf(deCompressFile, "%s", dictionary[dictionaryIterator].destinationName);
+							printMarks(str, i, deCompressFile);
+
 							break;
 						}
-						else
-						{
-							fprintf(comprassFile, "%s", word);
-							break;
-						}
+				}
+				if (strcmp(dictionary[dictionaryIterator].destinationName, word) != 0 && strcmp(dictionary[dictionaryIterator].sourceName, word) != 0) {
+					fprintf(deCompressFile, "%s", word);
+					printMarks(str, i, deCompressFile);
 
 				}
 				wordIndex = 0;
@@ -63,51 +66,58 @@ void deCompressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCoun
 				wordIndex++;
 			}
 		}
-		fprintf(comprassFile, "\n");
+		fprintf(deCompressFile, "\n");
 	}
-	fclose(comprassFile);
+	fclose(deCompressFile);
 }
 
-int main() {
-	Dictionary dictionary[256];
-	char stringInFile[256];
-	FILE* file = fopen("dictionary.txt", "r+");
-	FILE* compressFile = fopen("file.txt", "r+");
-
+int wordsFromDictionaryToStruct(FILE* file, Dictionary* dictionary) {
+	int wordIndex = 0;
+	char str[256];
 	int dictionaryCounter = 0;
-	
-	while ((fgets(stringInFile, 256, file)) != NULL) {
+	char word[256];
 
-		char word[256];
-		int wordIndex = 0;
+	while ((fgets(str, 256, file)) != NULL) {
 
-		for (int i = 0; i < strlen(stringInFile); i++) {
 
-			if (stringInFile[i] == ' ') {
+		for (int i = 0; i < strlen(str); i++) {
+
+			if (str[i] == ' ') {
 				word[wordIndex] = '\0';
 				strcpy(dictionary[dictionaryCounter].sourceName, word);
 				wordIndex = 0;
 				memset(word, 0, strlen(word));
 
 			}
-			else if (stringInFile[i] == '\0' || stringInFile[i] == '\n') {
+			else if (str[i] == '\0' || str[i] == '\n') {
 				word[wordIndex] = '\0';
 				strcpy(dictionary[dictionaryCounter].destinationName, word);
 				wordIndex = 0;
 				memset(word, 0, strlen(word));
 			}
 			else {
-				word[wordIndex] = stringInFile[i];
+				word[wordIndex] = str[i];
 				wordIndex++;
 			}
 		}
 		dictionaryCounter++;
-	}	
+	}
+	return dictionaryCounter;
+}
+
+int main() {
+	Dictionary dictionary[256];
+	FILE* file = fopen("dictionaryForDecompressor.txt", "r+");
+	FILE* compressFile = fopen("fileForDecompressor.txt", "r+");
+
+	int dictionaryCounter = 0;
+	dictionaryCounter = wordsFromDictionaryToStruct(file, dictionary);
+
 	fclose(file);
 	deCompressFile(compressFile, dictionary, dictionaryCounter);
 	fclose(compressFile);
 
-
+	printf("File is decompressed!");
 
 	return 0;
 }

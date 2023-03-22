@@ -134,10 +134,9 @@
     <ClInclude Include="Header.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="file.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="comprass.txt" />
+    <Text Include="file.txt" />
+    <Text Include="FileAfterComprass.txt" />
+    <Text Include="Dictionary.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,10 +25,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="dictionary.txt">
+    <Text Include="DictionaryForDecompressor.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
-    <Text Include="file.txt">
+    <Text Include="FileForDecompressor.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="decompressor.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>
