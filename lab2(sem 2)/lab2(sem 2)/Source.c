@@ -42,13 +42,14 @@ void printMarks(char* str, int i, FILE* comprassFile) {
 
 void compressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCounter) {
 	FILE* comprassFile;
-	char str[2048];
+	char str[8192];
 	int dictionaryIterator = 0;
 	int wordIndex = 0;
 	int destinationName = 0;
 	comprassFile = fopen("FileAftercomprass.txt", "w");
-	char word[128];
-	while ((fgets(str, 2048, sourceFile)) != NULL) {
+	//char word[128];
+	char *word = (char*) calloc(1,sizeof(char));
+	while ((fgets(str, 8192, sourceFile)) != NULL) {
 		for (int i = 0; i <= (strlen(str)); i++) {
 			if (str[i] == ' ' || str[i] == '\0' || str[i] == '\n' || str[i] == ',' || str[i] == '.' || str[i] == ';' || str[i] == ':') {
 				word[wordIndex] = '\0';
@@ -73,6 +74,7 @@ void compressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCounte
 			}
 			else {
 				word[wordIndex] = str[i];
+				word =(char*) realloc(word,(wordIndex + 1) * sizeof(char));
 				wordIndex++;
 			}
 		}
@@ -82,11 +84,12 @@ void compressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCounte
 }
 
 int getWordToStruct(Word* words, Dictionary* dictionary, FILE* file) {
-	char str[4096];
+	char *str=(char*)malloc(8192);
 	int allWordsCounter = 0;
 	int wordIndex = 0;
-	char word[256];
-	while ((fgets(str, 4096, file)) != NULL)
+	//char word[256];
+	char *word =(char*) calloc(1,sizeof(char));
+	while ((fgets(str, 8192, file)) != NULL)
 	{
 		for (int i = 0; i <= (strlen(str)); i++)
 		{
@@ -102,16 +105,19 @@ int getWordToStruct(Word* words, Dictionary* dictionary, FILE* file) {
 					words[allWordsCounter].isChanged = false;
 					words[allWordsCounter].value = strlen(word);
 					allWordsCounter++;
+					words = (Word*)realloc(words, (allWordsCounter + 1) * sizeof(Word));
 				}
 				else {
 					words[wordIndex].count = words[wordIndex].count + 1;
 					words[wordIndex].value = words[wordIndex].value + strlen(word);
 				}
-				wordIndex = NULL;
+				wordIndex = 0;
 			}
 			else
 			{
 				word[wordIndex] = str[i];
+				if (word == NULL) return 1;
+				word = (char*) realloc(word, (wordIndex + 2) * sizeof(char));
 				wordIndex++;
 			}
 		}
@@ -133,6 +139,7 @@ int wordsToDictionary(int allWordsCounter, Word* words, Dictionary* dictionary) 
 				strcpy(dictionary[dictionaryCounter].destinationName, words[j].name);
 
 				dictionaryCounter++;
+				dictionary = (Dictionary*)realloc(dictionary, (dictionaryCounter + 1) * sizeof(Dictionary));
 
 				words[i].isChanged = true;
 				words[j].isChanged = true;
