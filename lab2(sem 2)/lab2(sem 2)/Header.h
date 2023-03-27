@@ -23,6 +23,6 @@ void printMarks(char* str, int i, FILE* comprassFile);
 
 void compressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCounter);
 
-int getWordToStruct(Word* words, Dictionary* dictionary, FILE* file);
+Word* getWordToStruct(int *allWordsCounter, FILE* file);
 
 int wordsToDictionary(int allWordsCounter, Word* words, Dictionary* dictionary);

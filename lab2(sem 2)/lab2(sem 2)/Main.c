@@ -15,19 +15,18 @@ int main() {
 	FILE* file = fopen("file.txt", "r");
 	int resForFire;
 	//if ((resForFire = fopen("file.txt", "r+")) == NULL) return 1;
-	
-	int allWordsCounter = getWordToStruct(words, dictionary, file);
+	int  allWordsCounter = 0;
+	words = getWordToStruct(&allWordsCounter, file);
 
 	qsort(words, allWordsCounter, sizeof(words[0]), compare);
-	int dictionaryCounter = wordsToDictionary(allWordsCounter, words, dictionary);
-
-	for (int i = 0; i < dictionaryCounter; i++) {
+	words = wordsToDictionary(10, words, dictionary);
+	for (int i = 0; i < 10; i++) {
 		fprintf(dictionaryFile, "%s %s\n", dictionary[i].sourceName, dictionary[i].destinationName);
 	}
 
 	fclose(file);	
 	file = fopen("file.txt", "r+");
-	compressFile(file, dictionary, dictionaryCounter);
+	compressFile(file, dictionary, 10);
 	fclose(file);
 
 	fclose(dictionaryFile);

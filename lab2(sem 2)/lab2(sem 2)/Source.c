@@ -83,9 +83,10 @@ void compressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCounte
 	fclose(comprassFile);
 }
 
-int getWordToStruct(Word* words, Dictionary* dictionary, FILE* file) {
+Word* getWordToStruct(int *allWordsCounter, FILE* file) {
 	char *str=(char*)malloc(8192);
-	int allWordsCounter = 0;
+	Word* words = calloc(1, sizeof(Word));
+	*allWordsCounter = 0;
 	int wordIndex = 0;
 	//char word[256];
 	char *word =(char*) calloc(1,sizeof(char));
@@ -97,15 +98,17 @@ int getWordToStruct(Word* words, Dictionary* dictionary, FILE* file) {
 			{
 				word[wordIndex] = '\0';
 
-			     wordIndex = findIndexByNameForWords(word, words, allWordsCounter);
+			     wordIndex = findIndexByNameForWords(word, words, *allWordsCounter);
 				if (wordIndex == -1) {
-					strcpy(words[allWordsCounter].name, word);
-					words[allWordsCounter].size = strlen(word);
-					words[allWordsCounter].count = 1;
-					words[allWordsCounter].isChanged = false;
-					words[allWordsCounter].value = strlen(word);
-					allWordsCounter++;
-					words = (Word*)realloc(words, (allWordsCounter + 1) * sizeof(Word));
+					int allWordsCounterValue = *allWordsCounter;
+					strcpy(words[allWordsCounterValue].name, word);
+					words[allWordsCounterValue].size = strlen(word);
+					words[allWordsCounterValue].count = 1;
+					words[allWordsCounterValue].isChanged = false;
+					words[allWordsCounterValue].value = strlen(word);
+					allWordsCounterValue++;
+					*allWordsCounter = *allWordsCounter + 1;
+					words = (Word*)realloc(words, (allWordsCounterValue + 1) * sizeof(Word));
 				}
 				else {
 					words[wordIndex].count = words[wordIndex].count + 1;
@@ -122,7 +125,8 @@ int getWordToStruct(Word* words, Dictionary* dictionary, FILE* file) {
 			}
 		}
 	}
-	return allWordsCounter;
+	//qsort(words, (*allWordsCounter - 1), sizeof(words[0]), compare);
+	return words;
 }
 
 int wordsToDictionary(int allWordsCounter, Word* words, Dictionary* dictionary) {
@@ -139,7 +143,7 @@ int wordsToDictionary(int allWordsCounter, Word* words, Dictionary* dictionary) 
 				strcpy(dictionary[dictionaryCounter].destinationName, words[j].name);
 
 				dictionaryCounter++;
-				dictionary = (Dictionary*)realloc(dictionary, (dictionaryCounter + 1) * sizeof(Dictionary));
+				dictionary = (Dictionary*) (Dictionary*)realloc(dictionary, (dictionaryCounter + 1) * sizeof(Dictionary));
 
 				words[i].isChanged = true;
 				words[j].isChanged = true;
@@ -148,4 +152,17 @@ int wordsToDictionary(int allWordsCounter, Word* words, Dictionary* dictionary) 
 		}
 	}
 	return dictionaryCounter;
+}
+
+void startDecompress(FILE* file) {
+	Word* words = calloc(1, sizeof(Word));
+	Dictionary* dictionary = calloc(1, sizeof(Dictionary));
+	FILE* dictionaryFile = fopen("dictionary.txt", "w");
+	int resFordictionaryFile;
+	int resForFire;
+	//if ((resForFire = fopen("file.txt", "r+")) == NULL) return 1;
+	int allWordsCounter = 0;
+
+	words = getWordToStruct(&allWordsCounter, file);
+	words = wordsToDictionary(10, words, dictionary);
 }
