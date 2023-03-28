@@ -5,28 +5,25 @@
 #include "Header.h"
 
 int main() {
-	//Word words[256];
-	Word *words = calloc(1,sizeof(Word));
-	//Dictionary dictionary[256];
-	Dictionary *dictionary = calloc(1,sizeof(Dictionary));
+	Word *words;
+	Dictionary* dictionary;
 	FILE* dictionaryFile = fopen("dictionary.txt", "w");
-	int resFordictionaryFile;
-	//if ((resFordictionaryFile = fopen("dictionary.txt", "w")) == NULL) return 1;
 	FILE* file = fopen("file.txt", "r");
-	int resForFire;
-	//if ((resForFire = fopen("file.txt", "r+")) == NULL) return 1;
 	int  allWordsCounter = 0;
 	words = getWordToStruct(&allWordsCounter, file);
 
 	qsort(words, allWordsCounter, sizeof(words[0]), compare);
-	words = wordsToDictionary(10, words, dictionary);
-	for (int i = 0; i < 10; i++) {
+
+	int dictionaryCounter = 0;
+	dictionary = wordsToDictionary(allWordsCounter, words, &dictionaryCounter);
+	
+	for (int i = 0; i < dictionaryCounter; i++) {
 		fprintf(dictionaryFile, "%s %s\n", dictionary[i].sourceName, dictionary[i].destinationName);
 	}
 
 	fclose(file);	
 	file = fopen("file.txt", "r+");
-	compressFile(file, dictionary, 10);
+	compressFile(file, dictionary, dictionaryCounter);
 	fclose(file);
 
 	fclose(dictionaryFile);

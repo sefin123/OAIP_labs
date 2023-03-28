@@ -25,4 +25,4 @@ void compressFile(FILE* sourceFile, Dictionary* dictionary, int dictionaryCounte
 
 Word* getWordToStruct(int *allWordsCounter, FILE* file);
 
-int wordsToDictionary(int allWordsCounter, Word* words, Dictionary* dictionary);
+Dictionary* wordsToDictionary(int allWordsCounter, Word* words, int* dictionaryCounter);
