@@ -9,6 +9,7 @@ int main() {
 	Dictionary* dictionary;
 	FILE* dictionaryFile = fopen("dictionary.txt", "w");
 	FILE* file = fopen("file.txt", "r");
+
 	int  allWordsCounter = 0;
 	words = getWordToStruct(&allWordsCounter, file);
 
@@ -22,11 +23,16 @@ int main() {
 	}
 
 	fclose(file);	
+
 	file = fopen("file.txt", "r+");
 	compressFile(file, dictionary, dictionaryCounter);
 	fclose(file);
 
 	fclose(dictionaryFile);
+
+	free(words);
+	free(dictionary);
+	
 	printf("file if comprassed!");
 	return 0;
 }

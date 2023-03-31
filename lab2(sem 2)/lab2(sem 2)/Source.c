@@ -135,7 +135,7 @@ Dictionary* wordsToDictionary(int allWordsCounter, Word* words,int* dictionaryCo
 		for (int j = 1; j < allWordsCounter; j++) {
 			if (words[j].isChanged) continue;
 
-			if (words[i].size != 0 && words[i].count > 1 && (words[i].value + words[j].value) > ((words[i].size * words[j].count) + (words[j].size * words[i].count))) {
+				if (words[i].size != 0 && words[i].count > 1 && (words[i].value + words[j].value) > ((words[i].size * words[j].count) + (words[j].size * words[i].count))) {
 				int dictionaryCounterValue = *dictionaryCounter;
 				strcpy(dictionary[dictionaryCounterValue].sourceName, words[i].name);
 				strcpy(dictionary[dictionaryCounterValue].destinationName, words[j].name);
