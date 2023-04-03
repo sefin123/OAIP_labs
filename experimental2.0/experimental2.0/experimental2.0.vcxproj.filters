@@ -16,7 +16,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.c">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bmp.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

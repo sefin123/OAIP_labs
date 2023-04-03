@@ -32,9 +32,20 @@ typedef struct BMPFile{
 	unsigned char* data;
 }BMPFile;
 
+typedef struct pixelStruct {
+	unsigned char blue;
+	unsigned char green;
+	unsigned char red;
+}pixelStruct;
+
 #pragma pop
 
-BMPFile* loadBMPFile(char* name);
+void printParametrsOfFile(BMPFile* bmpFile);
+
+BMPFile* loadReadBMPFile(char* name,FILE* file);
+
+pixelStruct** readPixels(pixelStruct** pixel, BMPFile* bmpFile, FILE* file);
 
 void freeBMPFile(BMPFile* bmpFile);
 
+void negative(pixelStruct** pixel, BMPFile* bmpFile);
