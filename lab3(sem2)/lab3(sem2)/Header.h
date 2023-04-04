@@ -1,51 +1,49 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
-#pragma pack(1)
+typedef struct BmpHeader BmpHeader;
+struct BmpHeader {
+	uint32_t fileSize;
+	uint8_t _space[4];
+	uint32_t dataOffset;
+	uint32_t infoHeaderSize;
 
-typedef struct BMPHeader {
-	unsigned char ID[2];
-	unsigned int sizeFile;
-	unsigned char unudsed[4];
-	unsigned int pixelOffset;
+	struct {
+		uint32_t width, height;
+	} size;
 
-} BMPHeader;
+	uint16_t planeCount;
+	uint16_t bitsPerPixel;
+	uint32_t compressionType;
+	uint32_t imageSize;
 
-typedef struct DIBHeader {
-	unsigned int sizeHeader;
-	unsigned int width;
-	unsigned int height;
-	unsigned short colorPlanes;
-	unsigned short bitPerPixel;
-	unsigned int comp;
-	unsigned int sizeData;
-	unsigned int pwidth;
-	unsigned int pheight;
-	unsigned int countColor;
-	unsigned int countImpColor;
-}DIBHeader;
+	struct {
+		uint32_t width, height;
+	} pixelDensity;
 
-typedef struct BMPFile{
-	BMPHeader bhdr;
-	DIBHeader dhdr;
-	unsigned char* data;
-}BMPFile;
+	uint32_t colorCount;
+	uint32_t importantColorCount;
+};
 
-typedef struct pixelStruct {
-	unsigned char blue;
-	unsigned char green;
-	unsigned char red;
-}pixelStruct;
+typedef struct Pixel Pixel;
+struct Pixel {
+	uint8_t blue, green, red;
+};
 
-#pragma pop
+typedef struct BmpFile BmpFile;
+struct BmpFile {
+	BmpHeader header;
+	Pixel* data;
+};
 
-void printParametrsOfFile(BMPFile* bmpFile);
+void printHeader(BmpHeader* header);
 
-BMPFile* loadReadBMPFile(char* name,FILE* file);
+BmpFile readBMPFile(FILE* file);
 
-pixelStruct** readPixels(pixelStruct** pixel, BMPFile* bmpFile, FILE* file);
+void destructBMPFile(BmpFile* bmpFile);
 
-void freeBMPFile(BMPFile* bmpFile);
+void negative(Pixel* arr, int size);
 
-void negative(pixelStruct** pixel, BMPFile* bmpFile);
+void menu(BmpFile bmpFile);

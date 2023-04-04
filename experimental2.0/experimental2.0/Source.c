@@ -1,93 +1,53 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include "bmp.h"
-
-void greyFormat(Pixel** pixels, Pixel* pixel, BMPHeader header, BMPInfoHeader infoHeader)
+typedef struct FilterContext
 {
-    // преобразуем пиксели в черно-белый формат
-    for (int i = 0; i < infoHeader.height; i++) {
-        for (int j = 0; j < infoHeader.width; j++) {
-            pixel = &pixels[i][j];
+    Data* pixels;
+    Data resultPixels;
+    ChannelMode mode;
 
-            // вычисляем яркость пикселя
-            unsigned char gray = (unsigned char)((pixel->r + pixel->g + pixel->b) / 3);
-            // устанавливаем значения компонентов RGB в значение яркости
-            pixel->r = gray;
-            pixel->g = gray;
-            pixel->b = gray;
-        }
-    }
+    Pixel* pixel;
+    Pixel* resultPixel;
+
+    unsigned int x, y;
+    unsigned int width, height;
+
+    void* context;
+} FilterContext;
+
+int medianComparator(size_t channelOffset, const unsigned char* lhs, const unsigned char* rhs)
+{
+    return (lhs[channelOffset] >= rhs[channelOffset] ? 1 : -1);
 }
 
-void negativeFormat(Pixel** pixels, Pixel* pixel, BMPHeader header, BMPInfoHeader infoHeader)
+Pixel findMedian(Pixel* pixels, size_t size)
 {
-    for (int i = 0; i < infoHeader.height; i++) {
-        for (int j = 0; j < infoHeader.width; j++) {
-            pixel = &pixels[i][j];
+    Pixel medianPixel;
 
-            // устанавливаем значения компонентов RGB в значение яркости
-            pixel->r = 255 - pixel->r;
-            pixel->g = 255 - pixel->g;
-            pixel->b = 255 - pixel->b;
-        }
-    }
+    qsort_s(pixels, size, sizeof(Pixel), &medianComparator, 0);
+    medianPixel.r = pixels[size / 2].r;
+
+    qsort_s(pixels, size, sizeof(Pixel), &medianComparator, 1);
+    medianPixel.g = pixels[size / 2].g;
+
+    qsort_s(pixels, size, sizeof(Pixel), &medianComparator, 2);/////////////////////////////////////////////////////////////////////////////////////
+    medianPixel.b = pixels[size / 2].b;
+
+    return medianPixel;
 }
 
-void gammaCorection(Pixel** pixels, Pixel* pixel, BMPHeader header, BMPInfoHeader infoHeader)
+void medianFilter(FilterContext* context)
 {
-    float gamma;
-    printf("Offset gamma corection: ");
-    scanf_s("%f", &gamma);
-    for (int i = 0; i < infoHeader.height; i++) {
-        for (int j = 0; j < infoHeader.width; j++) {
-            pixel = &pixels[i][j];
-            unsigned char r = 255 * pow(pixel->r / 255.0f, gamma);
-            unsigned char g = 255 * pow(pixel->g / 255.0f, gamma);
-            unsigned char b = 255 * pow(pixel->b / 255.0f, gamma);
+    if (context->x == 0 || context->x == context->width - 1 || context->y == 0 || context->y == context->height - 1)
+        return;
 
-            if (r > 255) { r = 255; }
-            if (g > 255) { g = 255; }
-            if (b > 255) { b = 255; }
-            // устанавливаем значения компонентов RGB в значение яркости
-            pixel->r = r;
-            pixel->g = g;
-            pixel->b = b;
-        }
+    Pixel pixels[9];
+
+    for (int i = -1; i <= 1; i++)
+    {
+        pixels[i + 1] = *getPixel(context->x + i, context->y + 1, context);
+        pixels[3 + i + 1] = *getPixel(context->x + i, context->y, context);
+        pixels[5 + i + 1] = *getPixel(context->x + i, context->y - 1, context);
     }
-}
 
-void blur(Pixel** pixels, Pixel* pixel, BMPHeader header, BMPInfoHeader infoHeader)
-{
-    for (int i = 0; i < infoHeader.height; i++) {
-        for (int j = 0; j < infoHeader.width; j++) {
-            pixel = &pixels[i][j];
-            float sumRed, sumGreen, sumBlue;
-            int counter;
-            sumRed = sumGreen = sumBlue = counter = 0;
-
-            for (int k = -1; k < 2; k++)
-            {
-                for (int c = -1; c < 2; c++)
-                {
-                    if (i + k < 0 || i + k > infoHeader.height - 1)
-                    {
-                        continue;
-                    }
-                    if (j + c < 0 || j + c > infoHeader.width - 1)
-                    {
-                        continue;
-                    }
-                    sumRed += pixels[i + k][j + c].r;
-                    sumGreen += pixels[i + k][j + c].g;
-                    sumBlue += pixels[i + k][j + c].b;
-                    counter++;
-
-                }
-            }
-            pixel->r = round(sumRed / counter);
-            pixel->g = round(sumGreen / counter);
-            pixel->b = round(sumBlue / counter);
-        }
-    }
+    *context->resultPixel = findMedian(pixels, sizeof(pixels) / sizeof(Pixel));
+    context->resultPixel->a = context->pixel->a;
 }
