@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include <assert.h>
 #include <math.h>
 #include "Header.h"
@@ -42,8 +43,10 @@ void negative(Pixel* pixel, int size) {
 }
 
 void monoChrome(Pixel* pixel, int size) {
+
 	for (int i = 0; i < size; i++) {
-		unsigned char brightness = (pixel[i].blue + pixel[i].blue + pixel[i].blue) / 3;
+		//unsigned char brightness = (pixel[i].blue + pixel[i].blue + pixel[i].blue) / 3;
+		char brightness = (char)(0.3 * pixel[i].red + 0.59 * pixel[i].green + 0.11 * pixel[i].blue);
 		pixel[i].red = brightness;
 		pixel[i].green = brightness;
 		pixel[i].blue = brightness;
@@ -68,65 +71,54 @@ void gammaCorection(Pixel* pixel, int size) {
 	}
 }
 
-int compare(int iterator, char* l, char* r) {
-	if (l[iterator] >= r[iterator]) {
-		return 1;
-	}
-	return -1;
+int byRed(Pixel* left, Pixel* right) {
+	return right->red - left->red;
 }
 
-Pixel* getPixel(int x, int y, BmpHeader* bmpFile)
-{
-	if (x < 0) x = 0;
-	else if (x >= bmpFile->size.width) x = bmpFile->size.width - 1;
-
-	if (y < 0) y = 0;
-	else if (y >= bmpFile->size.height) y = bmpFile->size.height - 1;
-
-	return /*(Pixel*)context->pixels->buffer + */
-		(Pixel*)((y * bmpFile->size.width) + x);
+int byGreen(Pixel* left, Pixel* right) {
+	return right->green - left->green;
 }
 
-Pixel findMedian(Pixel* pixels,int size) {
-	Pixel median;
-
-	qsort(pixels, size, sizeof(Pixel), compare, 0);
-	median.red = pixels[size / 2].red;
-
-	qsort(pixels, size, sizeof(Pixel), compare, 1);
-	median.green = pixels[size / 2].green;
-	
-	qsort(pixels, size, sizeof(Pixel), compare, 2);
-	median.blue = pixels[size / 2].blue;
-
-	return median;
+int byBlue(Pixel* left, Pixel* right) {
+	return right->blue - left->blue;
 }
 
-void blurFilter(Pixel* pixel,BmpHeader* bmpFile, int x, int y) {
-	Pixel pixels[9];
+void blur(Pixel* pixels,int height,int width) {
+	int radius;
+	printf("enter blur radius: ");
+	scanf("%d", &radius);
 
-	for (int i = -1; i <= 1; i++)
+	const int surroundingSize = pow(2 * radius + 1, 2);
+	const int median = surroundingSize / 2;
+	const Pixel* surrounding = _malloca(sizeof(*surrounding) * surroundingSize);
+
+	if (!surrounding) abort();
+
+	for (int y = radius; y < height - radius; y++)
 	{
-		pixels[i + 1] = *getPixel(x + i, y + 1, bmpFile);
-		pixels[3 + i + 1] = *getPixel(x + i, y, bmpFile);
-		pixels[5 + i + 1] = *getPixel(x + i, y - 1, bmpFile);
-	}
-	
-	*pixel = findMedian(pixels, sizeof(pixels) / sizeof(Pixel));
-	//*context->resultPixel = findMedian(pixels, sizeof(pixels) / sizeof(Pixel));
-	//context->resultPixel->a = context->pixel->a;
-}
+		for (int x = radius; x < width - radius; x++)
+		{
+			Pixel* it = surrounding;
+			for (int w = -radius; w <= radius; w++)
+			{
+				for (int h = -radius; h <= radius; h++)
+				{
+					*(it++) = pixels[(x + h) + (y + w) * width];
+				}
+			}
 
-void blur(Pixel* pixel, BmpHeader* bmpFile) {
+			Pixel* target = &pixels[x + y * width];
 
-	for (int y = 0; y < bmpFile->size.height; y++) {
-		for (int x = 0; x < bmpFile->size.width; x++) {
+			qsort(surrounding, surroundingSize, sizeof(*surrounding), byRed);
+			target->red = surrounding[median].red;
 
-			blurFilter(pixel, bmpFile, x, y);
+			qsort(surrounding, surroundingSize, sizeof(*surrounding), byGreen);
+			target->green = surrounding[median].green;
 
+			qsort(surrounding, surroundingSize, sizeof(*surrounding), byBlue);
+			target->blue = surrounding[median].blue;
 		}
 	}
-	
 }
 
 void menu(BmpFile bmpFile) {
@@ -138,10 +130,10 @@ void menu(BmpFile bmpFile) {
 	printf("4. blur\n");
 	printf("choose: ");
 	scanf_s("%d",&menu);
-	if (menu == 1) negative(bmpFile.data, bmpFile.header.imageSize);;
+	if (menu == 1) negative(bmpFile.data, bmpFile.header.imageSize);
 	if (menu == 2) monoChrome(bmpFile.data, bmpFile.header.imageSize);
 	if (menu == 3) gammaCorection(bmpFile.data, bmpFile.header.imageSize);
-	if (menu == 4) blur(bmpFile.data, &bmpFile);
+	if (menu == 4) blur(bmpFile.data, bmpFile.header.size.height, bmpFile.header.size.width);
 }
 
 void destructBMPFile(BmpFile* bmpFile) {

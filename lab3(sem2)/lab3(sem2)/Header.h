@@ -5,31 +5,31 @@
 
 typedef struct BmpHeader BmpHeader;
 struct BmpHeader {
-	uint32_t fileSize;
-	uint8_t _space[4];
-	uint32_t dataOffset;
-	uint32_t infoHeaderSize;
+	unsigned int fileSize;
+	unsigned char space[4];
+	unsigned int dataOffset;
+	unsigned int infoHeaderSize;
 
 	struct {
-		uint32_t width, height;
+		unsigned int width, height;
 	} size;
 
-	uint16_t planeCount;
-	uint16_t bitsPerPixel;
-	uint32_t compressionType;
-	uint32_t imageSize;
+	unsigned short planeCount;
+	unsigned short bitsPerPixel;
+	unsigned int compressionType;
+	unsigned int imageSize;
 
 	struct {
-		uint32_t width, height;
+		unsigned int width, height;
 	} pixelDensity;
 
-	uint32_t colorCount;
-	uint32_t importantColorCount;
+	unsigned int colorCount;
+	unsigned int importantColorCount;
 };
 
 typedef struct Pixel Pixel;
 struct Pixel {
-	uint8_t blue, green, red;
+	unsigned char blue, green, red;
 };
 
 typedef struct BmpFile BmpFile;
