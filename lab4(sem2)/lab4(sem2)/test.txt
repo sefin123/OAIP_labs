@@ -1,0 +1,7 @@
+Its alive
+Its plant
+NULL
+NULL
+Its an animal
+NULL
+NULL

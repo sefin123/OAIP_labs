@@ -25,4 +25,9 @@
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="test.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

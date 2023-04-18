@@ -1,20 +1,19 @@
-#define MAXWORD 256
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+#define MAX_STRING_LENGTH 256
+#define NULL_STRING "NULL"
 
-typedef struct binaryTree {
-	int data;
-	//char *word;
-	struct Tree *left;
-	struct Tree *right;
-}binaryTree;
+#define UNUSED (void)
+typedef struct Node {
+    char word[MAX_STRING_LENGTH];
+    struct Node* left;
+    struct Node* right;
+} Node;
 
+Node* deserializeTree(FILE* in);
 
+void gameAkinator(Node* root);
 
-void Print(binaryTree* tree);
-
-
-binaryTree* insert(binaryTree* root, int data);
-
-
-binaryTree* createNode(int data);
-
+void serializeTree(Node* root, FILE* out);

@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <math.h>
 #include "Header.h"
-
+#define BMP24Bit 24
 
 BmpFile readBMPFile(FILE* file) {
 	BmpFile bmpFile = {0};
@@ -17,7 +17,7 @@ BmpFile readBMPFile(FILE* file) {
 
 	bmpFile.data = calloc(bmpFile.header.imageSize, sizeof(*bmpFile.data));
 	
-	assert(bmpFile.header.bitsPerPixel == 24);
+	assert(bmpFile.header.bitsPerPixel == BMP24Bit);
 	fseek(file, bmpFile.header.dataOffset, SEEK_SET);
 	fread(bmpFile.data, sizeof(*bmpFile.data), bmpFile.header.imageSize, file);
 
@@ -45,7 +45,6 @@ void negative(Pixel* pixel, int size) {
 void monoChrome(Pixel* pixel, int size) {
 
 	for (int i = 0; i < size; i++) {
-		//unsigned char brightness = (pixel[i].blue + pixel[i].blue + pixel[i].blue) / 3;
 		char brightness = (char)(0.3 * pixel[i].red + 0.59 * pixel[i].green + 0.11 * pixel[i].blue);
 		pixel[i].red = brightness;
 		pixel[i].green = brightness;
@@ -57,7 +56,7 @@ void gammaCorection(Pixel* pixel, int size) {
 	float correctionValue;
 	
 	printf("Value gamma corection: ");
-	scanf("%f", &correctionValue);
+	(void)scanf("%f", &correctionValue);
 
 	for (int i = 0; i < size; i++) {
 		unsigned char red = 255 * pow(pixel[i].red / 255.0f, correctionValue);
@@ -86,23 +85,21 @@ int byBlue(Pixel* left, Pixel* right) {
 void blur(Pixel* pixels,int height,int width) {
 	int radius;
 	printf("enter blur radius: ");
-	scanf("%d", &radius);
+	(void)scanf("%d", &radius);
 
-	const int surroundingSize = pow(2 * radius + 1, 2);
-	const int median = surroundingSize / 2;
-	const Pixel* surrounding = _malloca(sizeof(*surrounding) * surroundingSize);
+	int surroundingSize = pow(2 * radius + 1, 2);
+	int median = surroundingSize / 2;
+	Pixel* surrounding = malloc(sizeof(*surrounding) * surroundingSize);
 
 	if (!surrounding) abort();
 
-	for (int y = radius; y < height - radius; y++)
-	{
-		for (int x = radius; x < width - radius; x++)
-		{
+	for (int y = radius; y < height - radius; y++) {
+		for (int x = radius; x < width - radius; x++) {
+
 			Pixel* it = surrounding;
-			for (int w = -radius; w <= radius; w++)
-			{
-				for (int h = -radius; h <= radius; h++)
-				{
+			
+			for (int w = -radius; w <= radius; w++) {
+				for (int h = -radius; h <= radius; h++) {
 					*(it++) = pixels[(x + h) + (y + w) * width];
 				}
 			}

@@ -28,6 +28,7 @@ int enterWithValidationForIndex(int value) {
 
 char* enterString() {
 	char* string = calloc(256, sizeof(char));
+	if (string == NULL) abort();
 
 	gets_s(string, 255);
 

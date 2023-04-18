@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "Header.h"
+#define fileName 256
 
 int main() {
-	char nameOfFile[256];
+	char nameOfFile[fileName];
 	printf("Enter file:");
-	scanf("%s", nameOfFile);
+	(void)scanf("%s", nameOfFile);
 
+	nameOfFile[strlen(nameOfFile)] = '\0';
+	
 	FILE* file = fopen(nameOfFile, "r");
 	assert(file && "Cant open file");
 
@@ -22,8 +26,7 @@ int main() {
 	
 	fputs("BM", fileOutput);
 	fwrite(&bmpFile.header, sizeof(bmpFile.header), 1, fileOutput);
-	char zero = 0;
-	while (ftell(fileOutput) < bmpFile.header.dataOffset) fwrite(&zero, 1, 1, fileOutput);
+
 	fwrite(bmpFile.data, sizeof(*bmpFile.data), bmpFile.header.imageSize, fileOutput);
 
 	destructBMPFile(&bmpFile);

@@ -129,6 +129,8 @@ Word* getWordToStruct(int *allWordsCounter, FILE* file) {
 
 Dictionary* wordsToDictionary(int allWordsCounter, Word* words,int* dictionaryCounter) {
 	Dictionary* dictionary = calloc(1, sizeof(Dictionary));
+	if (dictionary == NULL) abort;
+
 	for (int i = 0; i < allWordsCounter; i++) {
 		if (words[i].isChanged) continue;
 
