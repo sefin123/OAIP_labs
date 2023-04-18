@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Header.h"
+#include "log.h"
 
 #define MAX_STRING_LENGTH 256
 #define NULL_STRING "NULL"
@@ -19,17 +20,6 @@ Node* createNode(const char* word, Node* left, Node* right) {
     node->left = left;
     node->right = right;
     return node;
-}
-
-void Print(Node* root, int indent) {
-    if (root == NULL) {
-        printf("%*s%s\n", indent, "", NULL_STRING);
-        return;
-    }
-
-    printf("%*s%s\n", indent, "", root->word);
-    Print(root->left, indent + 2);
-    Print(root->right, indent + 2);
 }
 
 void serializeTree(Node* root, FILE* out) {
@@ -93,13 +83,14 @@ void correctAnswersTree(Node* node) {
     fgets(answer, MAX_STRING_LENGTH, stdin);
     answer[strcspn(answer, "\n")] = '\0';
 
+    mlog("New entity: %s", answer);
 
     printf("\nWhat question is better to ask?\nQuestion: ");
     char question[MAX_STRING_LENGTH];
     fgets(question, MAX_STRING_LENGTH, stdin);
     question[strcspn(question, "\n")] = '\0';
 
-
+    mlog("New question: %s", question);
 
     node->left = createNode(node->word, NULL, NULL);
     node->right = createNode(answer, NULL, NULL);
@@ -108,9 +99,13 @@ void correctAnswersTree(Node* node) {
 }
 
 void gameAkinator(Node* root) {
+    mlog("Question: %s", root->word);
+    
     printf("%s?\n1.yes//0.no\nchoose: ", root->word);
     int choice;
     (void)scanf("%d", &choice);
+    
+    mlog("Choice: %d", choice);
 
     if (!(root->right == NULL || root->left == NULL)) {
         if (choice == 0)gameAkinator(root->left);
@@ -121,5 +116,4 @@ void gameAkinator(Node* root) {
         if (choice == 0) correctAnswersTree(root);
         if (choice == 1) printf("\nEnd of the game\n");
     }
-
 }

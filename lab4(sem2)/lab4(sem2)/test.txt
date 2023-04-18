@@ -1,7 +1,59 @@
 Its alive
 Its plant
+Object of wood
+Setting it up there
+Plate
 NULL
 NULL
-Its an animal
+Spoon
+NULL
+NULL
+You can sit on it
+Table
+NULL
+NULL
+chair
+NULL
+NULL
+Ground plants
+There is a flower on it
+NULL
+NULL
+Big
+Bush
+NULL
+NULL
+Tree
+NULL
+NULL
+Animal
+Person
+bacteria
+slipper caudatum
+NULL
+NULL
+anabeca
+NULL
+NULL
+Study in BSUIR
+Ura's brother
+NULL
+NULL
+Ura
+NULL
+NULL
+Can fly
+Fast move
+turtle
+NULL
+NULL
+Jaguar
+NULL
+NULL
+Fast fly
+Fly
+NULL
+NULL
+eagle
 NULL
 NULL
