@@ -4,26 +4,30 @@
 
 FILE* logOut = NULL;
 
-void logOpen(char* file)
-{
+void logOpen(char* file) {
     logOut = fopen(file, "w");
 }
 
-void mlog(char* format, ...) {
+void logClose(char* file) {
+    file = fclose(file);
+}
+
+void messageLog(char* format, char* message) {
     FILE* out = logOut;
 
     time_t now = time(NULL);
 
+    struct tm timeInfo;
+    localtime_s(&timeInfo, &now);
+
     if (!out) {
         out = stderr;
-        fprintf(out, "%lld|Log file is not installed!\n", now);
+        fprintf(out, "%d:%d:%d|Log file is not opened!\n", timeInfo.tm_hour,timeInfo.tm_min,timeInfo.tm_sec);
     }
 
-    fprintf(out, "%lld|", now);
+    fprintf(out, "%d:%d:%d|", timeInfo.tm_hour,timeInfo.tm_min,timeInfo.tm_sec);
 
-    va_list args;
-    va_start(args, format);
-    vfprintf(out, format, args);
+    fprintf(out, format, message);
     
     fputc('\n', out);
 }

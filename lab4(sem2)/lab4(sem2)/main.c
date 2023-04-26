@@ -6,7 +6,7 @@
 
 int main() {
     logOpen("test.log");
-
+    
     FILE* in = fopen("test.txt", "r");
     Node* root = deserializeTree(in);
     fclose(in);
@@ -14,6 +14,8 @@ int main() {
     gameAkinator(root);
 
     serializeTree(root, fopen("test.txt", "w"));
+
+    freeTree(&root);
 
     return 0;
 }

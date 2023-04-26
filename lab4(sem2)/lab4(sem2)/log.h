@@ -6,4 +6,6 @@ FILE* logOut;
 
 void logOpen(const char* file);
 
-void mlog(const char* format, ...);
+void logClose(char* file);
+
+void messageLog(char* format, char* message);

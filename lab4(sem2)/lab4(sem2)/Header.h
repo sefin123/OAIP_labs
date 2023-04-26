@@ -5,7 +5,6 @@
 #define MAX_STRING_LENGTH 256
 #define NULL_STRING "NULL"
 
-#define UNUSED (void)
 typedef struct Node {
     char word[MAX_STRING_LENGTH];
     struct Node* left;
@@ -17,3 +16,5 @@ Node* deserializeTree(FILE* in);
 void gameAkinator(Node* root);
 
 void serializeTree(Node* root, FILE* out);
+
+void freeTree(Node* node);
