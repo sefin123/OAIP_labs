@@ -47,12 +47,16 @@ void gameAkinator(Node* root) {
     messageLog("Choice: %d", choice);
 
     if (!(root->right == NULL || root->left == NULL)) {
-        if (choice == 0)gameAkinator(root->left);
-        if (choice == 1)gameAkinator(root->right);
+        if (choice == 0) 
+            gameAkinator(root->left);
+        if (choice == 1)
+            gameAkinator(root->right);
     }
 
     if (root->right == NULL && root->left == NULL) {
-        if (choice == 0) correctAnswersTree(root);
-        if (choice == 1) printf("\nEnd of the game\n");
+        if (choice == 0)
+            correctAnswersTree(root);
+        if (choice == 1)
+            printf("\nEnd of the game\n");
     }
 }

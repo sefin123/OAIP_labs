@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,10 +12,8 @@ typedef struct Node {
     struct Node* right;
 } Node;
 
-Node* deserializeTree(FILE* in);
+int enterWithValidation();
+
+void correctAnswersTree(Node* node);
 
 void gameAkinator(Node* root);
-
-void serializeTree(Node* root, FILE* out);
-
-void freeTree(Node* node);

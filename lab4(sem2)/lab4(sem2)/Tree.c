@@ -1,6 +1,7 @@
+#include <stdio.h>
 #include "Header.h"
 #include "Tree.h"
-#include <stdio.h>
+#include "log.h"
 
 Node* createNode(const char* word, Node* left, Node* right) {
     Node* node = malloc(sizeof(*node));
@@ -29,7 +30,6 @@ Node* deserializeTree(FILE* in) {
 
     if (fgets(node->word, MAX_STRING_LENGTH, in) == NULL) return NULL;
 
-    node->word[strlen(node->word) - 1] = '\0';
 
     if (strcmp(node->word, NULL_STRING) == 0) {
         free(node);

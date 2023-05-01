@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Header.h"
 #include "log.h"
+#include "Tree.h"
 
 int main() {
     logOpen("test.log");
