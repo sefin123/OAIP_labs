@@ -23,14 +23,15 @@ Data* readingString(char* str, Data* data) {
 
         if (str[j + 1] == '\n') data->IP[i + 1] = '\0';
     }
+    hash(data->domain);
     return data;
 }
 
 List* createList() {
     List* tmp = malloc(sizeof(*tmp));
     if (tmp == NULL) abort();
-    tmp->head = NULL;
-    tmp->tail = NULL;
+        tmp->head = NULL;
+        tmp->tail = NULL;
     return tmp;
 }
 
@@ -84,46 +85,71 @@ void* popBack(List* list) {
     return tmp;
 }
 
-List* deserializeList(FILE* file) {
+List* deserializeList() {
+    FILE* file = fopen("map.txt", "r");
     Data* data = malloc(sizeof(*data));
     if (data == NULL) abort();
-    List* list = createList();
+    List** list = NULL;
+    for (int i = 0; i < 5; i++)
+        list = createList();
     char str[MAX_STRING_LENGTH];
+
     while (fgets(str, MAX_STRING_LENGTH, file) != NULL) {
         data = readingString(str, data);
         push(list, data);
     }
+    fclose(file);
 
     return list;
 }
 
-void findIPInFile(FILE* file,List* list, char* search,bool hit) {
+int hash(char* str) {
+    int hash = 0;
+    for (int i = 0; str[i] != '\0'; i++) {
+        hash = hash * 31 + str[i];
+    }
+    return hash % 5;
+}
+
+void serializeList(List* list) {
+    FILE* file = fopen("map.txt", "w");
+    for (Node* it = list->head; it != list->tail->next; it = it->next) {
+        fprintf(file, "%s ",it->key);
+        fprintf(file, "%s\n", it->value);
+    }
+    fclose(file);
+}
+
+void findIPInFile(List* list, char* search,bool hit) {
+    FILE* file = fopen("database.txt", "r");
     Data* data = malloc(sizeof(*data));
     if (data == NULL) abort();
     char str[MAX_STRING_LENGTH];
     while (fgets(str, MAX_STRING_LENGTH, file) != NULL) {
         readingString(str, data);
+
         if (strcmp(search, data->domain) == 0) {
             hit = true;
             printf("Found in File:%s\n", data->IP);
             push(list, data);
             popBack(list);
+            serializeList(list);
         }
     }
     if (!hit)
         printf("Not found in File\n");
 }
 
-bool findIPInCache(List* list, char* search, bool hit) {
+bool findIPInhash(List* list, char* search, bool hit) {
 
     for (Node* it = list->head; it != list->tail->next; it = it->next) {
         if (strcmp(it->key, search) == 0) {
-            printf("Found in cache:%s\n", it->value);
+            printf("Found in hash:%s\n", it->value);
             hit = true;
         }
     }
     if (!hit)
-        printf("Not found in cache\n");
+        printf("Not found in hash\n");
     return hit;
 }
 
@@ -134,39 +160,33 @@ void printList(List* list) {
     }
 }
 
-void menu() {
+
+
+int main() {
     bool exit = true;
     while (exit) {
-        printf("1.Find IP\n");
-        printf("2.Print cache\n");
+        printf("1.Find IP\n2.Print hash\n0.Exit\n");
         int valueMenu;
         (void)scanf("%d", &valueMenu);
 
-        FILE* cache = fopen("cache.txt", "r");
-        FILE* database = fopen("database.txt", "r");
-
-        List* list = deserializeList(cache);
-
-        char search[MAX_STRING_LENGTH];
-        bool hit = false;
+        List* list = deserializeList();
 
         if (valueMenu == 1) {
-            printf("Enter domain: ");
+            bool hit = false;
+            printf("Enter domain:");
+            char search[MAX_STRING_LENGTH];
             (void)scanf("%s", search);
-            hit = findIPInCache(list, search, hit);
+            hit = findIPInhash(list, search, hit);
             if (!hit) {
-                findIPInFile(database, list, search, hit);
-
+                findIPInFile(list, search, hit);
             }
         }
-        if(valueMenu == 2)
+        if (valueMenu == 2)
             printList(list);
-        if (valueMenu == 0)
+        if (valueMenu == 0) {
+            freeList(&list);
             exit = false;
+        }
     }
-}
-
-int main() {
-    menu();
     return 0;
 }

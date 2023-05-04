@@ -28,7 +28,7 @@
     <Text Include="database.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
-    <Text Include="cache.txt">
+    <Text Include="map.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>
