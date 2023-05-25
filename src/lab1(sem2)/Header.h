@@ -33,7 +33,7 @@ void sortBooksPages(struct library* book, int size);
 
 void sortBooksYear(struct library* book, int size);
 
-void deleteBook(struct library* book, int* size);
+void deleteBook(struct library* book, int* size, int valueDelete);
 
 void changingParameters(int size, struct library* book, int valueMenu);
 
