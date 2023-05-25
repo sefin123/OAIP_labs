@@ -1,5 +1,6 @@
 lms.bsuir.by IN A 192.168.251.23
-lms2.bsuir.by IN CNAÃ≈ lms.bsuir.by
+lms2.bsuir.by IN CNAME lms.bsuir.by
+lms3.bsuir.by IN CNAME lms2.bsuir.by
 google.com IN A 142.250.181.238
 instagram.com IN A 157.240.20.174
 github.com IN A 140.82.121.3
@@ -17,3 +18,4 @@ weq IN A 1.4.1.2
 ewq IN A 1.1.1.1
 qw IN A 1.1.1.1
 ew IN A 1.1.1.5
+fabsdiflasd IN A 1.3.1.3

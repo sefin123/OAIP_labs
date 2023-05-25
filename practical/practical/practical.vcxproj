@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{fee0d8cf-6860-4b1e-bf84-349c310a127b}</ProjectGuid>
-    <RootNamespace>lab5sem2</RootNamespace>
+    <ProjectGuid>{6e60d1f7-a4ec-45c1-9ff7-ffa667c529bc}</ProjectGuid>
+    <RootNamespace>practical</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -102,7 +102,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -127,16 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="list.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="Source.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Header.h" />
-    <ClInclude Include="list.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="database.txt" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,4 +1,16 @@
 #include "Header.h"
+#include "list.h"
+
+int enterWithValidationForIndex(int value) {
+    int a;
+
+    while (scanf_s("%d", &a) != 1 || a < 1 || a > value || getchar() != '\n') {
+        printf("Error\n");
+        rewind(stdin);
+    }
+
+    return a;
+}
 
 int checkIPWithValidation(char* ip) {
     if (ip == NULL) {
@@ -25,6 +37,132 @@ unsigned int convertHash(const char* str) {
     return hash;
 }
 
+void hashTableDelete(HashTable* hashTable, const char* key) {
+    int index = convertHash(key) % HASH_SIZE;
+    Node* currentNode = hashTable->buckets[index].head;
+    Node* previousNode = NULL;
+
+    while (currentNode != NULL) {
+        if (strcmp(currentNode->data.key, key) == 0) {
+            if (previousNode == NULL) {
+            
+                hashTable->buckets[index].head = currentNode->next;
+            }
+            else {
+                previousNode->next = currentNode->next;
+            }
+            
+            if (currentNode == hashTable->buckets[index].tail) {
+                hashTable->buckets[index].tail = previousNode;
+            }
+
+            free(currentNode);
+            hashTable->count--;
+            return;
+        }
+        previousNode = currentNode;
+        currentNode = currentNode->next;
+    }
+}
+
+void deleteTail(Node** head, Node** tail) {
+    Node* temp = (*head);
+    if ((*tail) != (*head)) {
+        while (temp->next != (*tail))
+            temp = temp->next;
+        (*tail) = temp;
+        (*tail)->next = NULL;
+    }
+    else {
+        (*tail) = NULL;
+        (*head) = NULL;
+    }
+}
+
+void ToHead(Node** head, Node** tail, const char* key, const char* value) {
+
+    Data data = { 0 };
+    strcpy(data.key, key);
+    strcpy(data.value, value);
+    Node* temp = initNode(malloc(sizeof(*temp)), data);
+
+
+    if ((*head) == NULL) {
+        (*head) = temp;
+        (*tail) = temp;
+    }
+    else {
+        temp->next = (*head);
+        (*head)->prev = temp;
+        (*head) = temp;
+    }
+}
+
+void preoritet(Node* node, HashTable* cashe) {
+    if (node == NULL) return;
+    if (cashe->head == node)
+        return;
+
+    Node* temp = cashe->head;
+
+    cashe->head = node;
+    
+    node->prev->next = node->next;
+
+    if (node->next != NULL)
+        node->next->prev = node->prev;
+
+    if (cashe->tail == node)
+        cashe->tail = node->prev;
+
+    node->next = temp;
+    node->prev = NULL;
+
+    temp->prev = node;
+}
+
+void insertHashtable(HashTable* table, char* key, char* value) {
+    Data data = { 0 };
+    strcpy(data.key, key);
+    strcpy(data.value, value);
+
+    List* bucket = mapBucket(table, key);
+    Node* currentNode = bucket->head;
+    while (currentNode != NULL) {
+        if (strcmp(currentNode->data.key, key) == 0) {
+            strcpy(currentNode->data.value, value);
+            return;
+        }
+        currentNode = currentNode->next;
+    }
+    Node* newNode = malloc(sizeof(*newNode));
+    if (newNode == NULL) abort();
+    newNode->data = data;
+    newNode->next = NULL;
+    newNode->prev = NULL;
+
+    if (bucket->head == NULL) {
+        bucket->head = newNode;
+        bucket->tail = newNode;
+    }
+    else {
+        bucket->tail->next = newNode;
+        newNode->prev = bucket->tail;
+        bucket->tail = newNode;
+    }
+    table->count++;
+}
+
+void insertCache(HashTable* cache, const char* key, const char* value) {
+    if (cache->count > HASH_SIZE) {
+        hashTableDelete(cache->buckets, cache->tail->data.key);
+
+        deleteTail(&cache->head, &cache->tail);
+    }
+    ToHead(&cache->head, &cache->tail, key, value);
+    insertHashtable(cache->buckets, key, value);
+}
+
 void addDomainToFile(char* search) {
     printf("There are no element.Add your ");
 
@@ -42,53 +180,36 @@ void addDomainToFile(char* search) {
 
 }
 
-void push(HashTable* hash, char* domain, char* ip) {
-    int index = convertHash(domain) % hash->size;
-
-    while (hash->table[index] != NULL && index < hash->size)
-        index++;
-
-    if (index >= hash->size) {
-        for (int i = 0; i < hash->size - 1; i++) {
-            hash->table[i] = hash->table[i + 1];
-        }
-
-        hash->table[index - 1] = NULL;
-        index--;
-    }
-
-    Hash* h = malloc(sizeof(Hash));
-    if (h == NULL) abort();
-
-    strcpy(h->key, domain);
-    strcpy(h->value, ip);
-
-    h->prev = NULL;
-    h->next = NULL;
-    hash->table[index] = h;
+List* mapBucket(HashTable* self, const char* key) {
+    return &self->buckets[convertHash(key) % HASH_SIZE];
 }
 
-void CNAMECheck(char* newDomain) {
-    FILE* file = fopen("database.txt", "r");
-    if (file == NULL) abort();
-
-    char str[MAX_STRING_LENGTH]; char domain[MAX_STRING_LENGTH]; char cname[MAX_STRING_LENGTH];
-
-    while (fgets(str, MAX_STRING_LENGTH, file) != NULL) {
-        if (sscanf(str, "%s IN CNAМЕ %s", domain, cname) == 2) {
-            domain[strlen(domain)] = '\0';
-            if (strcmp(domain, newDomain) == 0) {
-                cname[strlen(cname)] = '\0';
-
-                strcpy(newDomain, cname);
-            }
+Node* findNode(HashTable* self, const char* key) {
+    List* bucket = mapBucket(self, key);
+    for (Node* it = bucket->head; it; it = it->next) {
+        if (!strcmp(it->data.key, key)) {
+            insertCache(self, key, it->data.value);
+            
+            return it;
         }
     }
-    fclose(file);
+    return NULL;
 }
 
-void findInFile(HashTable* hash, char* search) {
-    CNAMECheck(search);
+char* findIPPushToBucket(HashTable* hash, const char* key) {
+    Node* node = findNode(hash, key);
+    preoritet(node, hash);
+    if (node == NULL) return NULL;
+
+    List* bucket = mapBucket(hash, key);
+    detachFromList(bucket, node);
+    pushNodeFront(bucket, node);
+
+    return node->data.value;
+}
+
+char* findIpInFile(HashTable* hash, char* search) {
+    search = findCNAMEDomain(search);
     bool isThere = false;
     char str[MAX_STRING_LENGTH]; char domain[MAX_STRING_LENGTH]; char ip[MAX_STRING_LENGTH];
 
@@ -97,10 +218,11 @@ void findInFile(HashTable* hash, char* search) {
     while (fgets(str, MAX_STRING_LENGTH, file) != NULL) {
         if (sscanf(str, "%s IN A %s", domain, ip) == 2) {
             domain[strlen(domain)] = '\0';
+            ip[strlen(ip)] = '\0';
 
             if (strcmp(domain, search) == 0) {
-                push(hash, search, ip);
-
+                printf("%s\n", ip);
+                return _strdup(ip);
                 isThere = true;
             }
         }
@@ -112,54 +234,57 @@ void findInFile(HashTable* hash, char* search) {
     fclose(file);
 }
 
-char* hashtable_search(HashTable* table, char* key) {   //осуществляет поиск значения по ключу в хэш-таблице 
-    int index = hash_function(key);
-    Queue* current_object = table->table[index];
-    HashTable* head = table->table[index]->head;
-    while (current_object != NULL) {
-        if (!strcmp(current_object->, key))
-            return current_object->node->value;
-        if (head == NULL)
-            return NULL;
-        current_object = head->object;
-        head = head->next;
+void setInHash(HashTable* self, const char* key, const char* value) {
+    Node* node = findNode(self, key);
+    if (node != NULL) {
+        List* bucket = mapBucket(self, key);
+        detachFromList(bucket, node);
+        pushNodeFront(bucket, node);
+
+        strcpy(node->data.value, value);
+        return;
     }
-    return NULL;
+
+    Data data = { 0 };
+    strcpy(data.key, key);
+    strcpy(data.value, value);
+    pushFront(mapBucket(self, key), data);
+    node = findNode(self, key);
 }
 
-void findIPByDomain(HashTable* hash, char* search) {
+void findIP(const char* domain, FILE* source, HashTable* cache) {
+    char* ip = findIPPushToBucket(cache, domain);
+    if (ip != NULL) return ;
 
-    bool HIT = false;
-    for (int i = convertHash(search) % hash->size; i < hash->size; i++) {
-        Queue* h = hash->table[i];
-        while (h != NULL) {
-            if (strcmp(h->head->key, search) == 0) {
-                if (!HIT) printf("\n%s\n\n", h->head->value);
-                HIT = true;
-                for (int j = i; j < hash->size - 1; j++) {
-                    hash->table[j] = hash->table[j + 1];
-                }
-                hash->table[hash->size - 1] = h;
+    ip = findIpInFile(cache, domain);
+    if (ip == NULL) return ;
+
+    setInHash(cache, domain, ip);
+    return ip;
+}
+
+char* findCNAMEDomain(char* newDomain) {
+    FILE* file = fopen("database.txt", "r");
+    if (file == NULL) abort();
+
+    char str[MAX_STRING_LENGTH];
+    while (fgets(str, MAX_STRING_LENGTH, file) != NULL) {
+        char domain[MAX_STRING_LENGTH];
+        char cname[MAX_STRING_LENGTH];
+        if (sscanf(str, "%s IN CNAМЕ %s", domain, cname) == 2) {
+            domain[strlen(domain)] = '\0';
+            if (strcmp(domain, newDomain) == 0) {
+
+                cname[strlen(cname)] = '\0';
+
+                fclose(file);
+                return _strdup(cname);
             }
-            h = h->head->next;
         }
     }
-    if (!HIT) {
-        findInFile(hash, search);
-        findIPByDomain(hash, search);
-    }
-}
 
-void printTable(HashTable* hash) {
-    if (hash == NULL) return;
-    for (int i = 0; i < hash->size; i++) {
-        Hash* h = hash->table[i];
-        if (h != NULL) {
-            printf("%s IN A %s\n", h->key, h->value);
-            h = h->next;
-        }
-    }
-    printf("\n");
+    fclose(file);
+    return newDomain;
 }
 
 void findDomainByIP() {
@@ -180,15 +305,17 @@ void findDomainByIP() {
             search[strlen(search)] = '\0';
             ip[strlen(ip)] = '\0';
 
-            if (strcmp(search, ip) == 0) {
+            if (strcmp(search, ip) == 0) {//123 123
 
                 printf("\n%s\n\n", domain);
                 isThere = true;
-                strcpy(search, domain);
+                strcpy(search, domain); // 123 <- lms
             }
         }
-        if (sscanf(str, "%255s IN CNAМЕ %255s", domain, ip) == 2 && isThere) {
-            if (strcmp(search, ip) == 0)
+        if (sscanf(str, "%255s IN CNAME %255s", domain, ip) == 2 && isThere) {
+            if (strcmp(search, ip) == 0) {
+                strcpy(search, domain);
+            }// lms lms
                 printf("%s\n\n", domain);
         }
     }
@@ -203,21 +330,43 @@ void findDomainByIP() {
     }
 }
 
-void freeNode(Hash* node) {
-    if (node == NULL) return;
-        free(node->key);
-        free(node->value);
-        free(node);
+HashTable* initHashTable(HashTable* self) {
+    self->count = 0;
+    self->head = NULL;
+    self->tail = NULL;
+    for (int i = 0; i < HASH_SIZE; i++) {
+        initList(&self->buckets[i]);
+    }
+    return self;
 }
 
-void freeHashTable(HashTable* hash) {
-    if (hash == NULL) return;
+void printCache(HashTable* cache) {
+    Node* node = cache->head;
+    while (node != NULL) {
+        printf("%s - %s\n", node->data.key, node->data.value);
+        node = node->next;
+    }
+}
 
-    for (int i = 0; i < hash->size; i++) {
-        Hash* buf = hash->table[i];
-        if (buf != NULL) {
-            freeNode(buf);
+void freeHash(HashTable* hash) {
+    if (hash == NULL) return;
+    for (int i = 0; i < HASH_SIZE; i++) {
+        Node* current = &hash->buckets[i];
+        Node* next;
+        while (current != NULL) {
+            next = current->next;
+            free(current);
+            current = next;
         }
     }
-    free(hash->table);
+}
+
+void printTable(HashTable* hash) {
+    if (hash == NULL) return;
+
+    for (int i = 0; i < HASH_SIZE; i++) {
+        printf("--- Bucket %d ---\n", i);
+        printList(hash->buckets[i]);
+    }
+    printf("\n");
 }

@@ -3,44 +3,32 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define MAX_STRING_LENGTH 256
-#define HASH_SIZE 5
+#include "list.h"
 
-typedef struct Hash {
-	char key[MAX_STRING_LENGTH];
-	char value[MAX_STRING_LENGTH];
-	struct Hash* prev;
-	struct Hash* next;
-}Hash;
-
-typedef struct Queue {
-	struct Hash* head;
-	struct Hash* tail;
-}Queue;
-
-typedef struct HashTable {
-	int size;
-	struct Queue** table;
-}HashTable;
+int enterWithValidationForIndex(int value);
 
 int checkIPWithValidation(char* ip);
 
+List* mapBucket(HashTable* self, const char* key);
+
+Node* findNode(HashTable* self, const char* key);
+
 unsigned int convertHash(const char* str);
 
-void addDomainToFile(char* search);
+void setInHash(HashTable* self, char* key, char* value);
 
-void push(HashTable* hash, char* domain, char* ip);
+char* findIpInFile(char* search);
 
-void CNAMECheck(char* newDomain);
+void findIP(char* domain, FILE* source, HashTable* cache);
 
-void findInFile(HashTable* hash, char* search);
+char* findCNAMEDomain(char* newDomain);
 
-void findIPByDomain(HashTable* hash, char* search);
-
-void printTable(HashTable* hash);
+void printCache(HashTable* lru);
 
 void findDomainByIP();
 
-void freeNode(Hash* node);
+HashTable* initHashTable(HashTable* self);
 
-void freeHashTable(HashTable* hash);
+void printTable(HashTable* hash);
+
+void freeHash(HashTable* hash);
