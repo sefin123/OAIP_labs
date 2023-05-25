@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.23)
-project(OAIP_labs C)
+project(labs)
 
-set(CMAKE_C_STANDARD 99)
+file(GLOB LABS LIST_DIRECTORIES true "labs/*")
 
-file(GLOB_RECURSE SOURCES src/*.c)
-add_executable(monster ${SOURCES})
+foreach(LAB ${LABS})
+  if(IS_DIRECTORY ${LAB})
+    get_filename_component(TARGET ${LAB} NAME)
+    file(GLOB_RECURSE SOURCES "${LAB}/*.c")
+    add_executable(${TARGET} ${SOURCES})
+  endif()
+endforeach()
