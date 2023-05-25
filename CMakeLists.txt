@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(labs)
 
-file(GLOB LABS LIST_DIRECTORIES true "labs/*")
+file(GLOB LABS LIST_DIRECTORIES true "src/*")
 
 foreach(LAB ${LABS})
   if(IS_DIRECTORY ${LAB})
