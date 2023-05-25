@@ -15,10 +15,10 @@ int enterWithValidation() {
 	return a;
 }
 
-int enterWithValidationForIndex(int value) {
+int enterWithValidationForIndex(int index) {
 	int a;
 
-	while (scanf_s("%d", &a) != 1 || a < 1 || a > value || getchar() != '\n') {
+	while (scanf_s("%d", &a) != 1 || a < 1 || a > index || getchar() != '\n') {
 		printf("Error\n");
 		rewind(stdin);
 	}
@@ -28,7 +28,6 @@ int enterWithValidationForIndex(int value) {
 
 char* enterString() {
 	char* string = calloc(256, sizeof(char));
-	if (string == NULL) abort();
 
 	gets_s(string, 255);
 
@@ -48,29 +47,23 @@ int stringLength(const char* str) {
 	return length;
 }
 
+struct library {
+	char* name;
+	int year;
+	int pages;
+};
+
 void enterBook(int size, struct library* book) {
 	for (int i = 0; i < size; i++) {
 		printf("\nenter name of %d's book: ", i + 1);
 		rewind(stdin);
 		book[i].name = enterString();
+
 		printf("\nenter year of %d's book: ", i + 1);
 		book[i].year = enterWithValidation();
+
 		printf("\nenter amount pages of %d's book: ", i + 1);
 		book[i].pages = enterWithValidation();
-		printf("\nenter 1 - 3 for choose the color of %d's book", i + 1);
-		printf("\n1.red");
-		printf("\n2.blue");
-		printf("\n3.black");
-		printf("\nchoose: ");
-		book[i].color = enterWithValidationForIndex(3);
-	}
-}
-
-char* colorToString(enum Color color) {
-	switch (color) {
-	case Red: return "Red";
-	case Blue: return "Blue";
-	case Black: return "Black";
 	}
 }
 
@@ -79,8 +72,6 @@ void printBook(int size, struct library* book) {
 		printf("\nname of %d's book: %s", i + 1, book[i].name);
 		printf("\nyear of %d's book: %d", i + 1, book[i].year);
 		printf("\namount pages of %d's book: %d", i + 1, book[i].pages);
-		printf("\ncolor of %d's book: %s", i + 1, colorToString(book[i].color));
-
 	}
 }
 
@@ -126,30 +117,6 @@ void sortBooksYear(struct library* book, int size) {
 	}
 }
 
-void sortBooksTwoParametrs(struct library* book, int  size) {
-	struct library tmp;
-	
-	for (int i = size - 1; i >= 0; i--) {
-		for (int j = 0; j < i; j++) {
-            if ((book[j].year > book[j + 1].year) || (book[j].year == book[j + 1].year) && (book[j].pages > book[j + 1].pages)) {
-				tmp = book[j];
-				book[j] = book[j + 1];
-				book[j + 1] = tmp;
-			}
-		}
-	}
-}
-
-void deleteBook(struct library* book, int *size,int valueDelete) {
-	valueDelete--;
-	free(book[valueDelete].name);
-	for (int i = valueDelete; i < (*size) - 1; i++) {
-		book[i] = book[i + 1];
-	}
-	(*size)--;
-	book = realloc(book, (*size) * sizeof(struct library));
-}
-
 void changingParameters(int size, struct library* book,int valueMenu) {
 	printf("\nchoose which book to change\n");
 	int indexBook;
@@ -164,14 +131,12 @@ void sortBooks(struct library* book,int size) {
 	printf("1.Name\n");
 	printf("2.Year\n");
 	printf("3.Pages\n");
-	printf("4.sort 2 parametrs\n");
 	printf("choice: ");
 	int indexSort;
-	indexSort = enterWithValidationForIndex(4);
+	indexSort = enterWithValidationForIndex(3);
 	if (indexSort == 1) sortBooksName(book, size);
 	if (indexSort == 2) sortBooksYear(book, size);
 	if (indexSort == 3) sortBooksPages(book, size);
-	if (indexSort == 4) sortBooksTwoParametrs(book, size);
 }
 
 void menu(int size, struct library* book) {
@@ -190,22 +155,15 @@ void menu(int size, struct library* book) {
 		printf("\n3. change the number of pages of the book");
 		printf("\n4. sort books");
 		printf("\n5. print books");
-		printf("\n6. delete book");
-		printf("\n7. exit\n");
+		printf("\n6. exit\n");
 		printf("\nchoice: ");
 
 		int valueMenu;
-		valueMenu = enterWithValidationForIndex(7);
-		if (valueMenu == 7) exit = false;
-		if (valueMenu > 0 && valueMenu < 4 ) changingParameters(size, book, valueMenu);
+		valueMenu = enterWithValidationForIndex(6);
+		if (valueMenu == 6) exit = false;
+		if (valueMenu > 0 && valueMenu < 4 && exit) changingParameters(size, book, valueMenu);
 		if (valueMenu == 4)	sortBooks(book, size);
 		if (valueMenu == 5) printBook(size, book);
-		if (valueMenu == 6) {
-			printf("\nchoose which book to delete\n");
-			int valueDelete;
-			valueDelete = enterWithValidationForIndex(size);
-			deleteBook(book, &size,valueDelete);
-		}
-			printf("\n");
+		printf("\n");
 	}
 }
