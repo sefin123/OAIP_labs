@@ -199,13 +199,11 @@ Node* findNode(HashTable* self, const char* key) {
 char* findIPPushToBucket(HashTable* hash, const char* key) {
     Node* node = findNode(hash, key);
     preoritet(node, hash);
-    if (node == NULL) return NULL;
 
     List* bucket = mapBucket(hash, key);
     detachFromList(bucket, node);
     pushNodeFront(bucket, node);
 
-    return node->data.value;
 }
 
 char* findIpInFile(HashTable* hash, char* search) {
@@ -230,6 +228,8 @@ char* findIpInFile(HashTable* hash, char* search) {
 
     if (!isThere)
         addDomainToFile(search);
+    
+    return NULL;
 
     fclose(file);
 }
